@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+    <title>nns_debug</title>
+</head>
+<body>
+    <script>
+        window.addEventListener('message', function (event) {
+            if (event.data.resource === 'nns_debug') {
+                if (event.data.func === 'coords') {
+                    if (event.data.lang == 'js') {
+                        copyUtil(`new Vector3(${event.data.coords.x}, ${event.data.coords.y}, ${event.data.coords.z})`)
+                    } else if (event.data.lang == 'json') {
+                        copyUtil(JSON.stringify({ x: event.data.coords.x, y: event.data.coords.y, z: event.data.coords.z }))
+                    } else {
+                        copyUtil(`vector3(${event.data.coords.x}, ${event.data.coords.y}, ${event.data.coords.z})`)
+                    }
+                } else if (event.data.func === 'heading') {
+                    copyUtil(event.data.heading)
+                } else if (event.data.func === 'rotation') {
+                    if (event.data.lang == 'js') {
+                        copyUtil(`new Vector3(${event.data.rotation.x}, ${event.data.rotation.y}, ${event.data.rotation.z})`)
+                    } else if (event.data.lang == 'json') {
+                        copyUtil(JSON.stringify({ x: event.data.rotation.x, y: event.data.rotation.y, z: event.data.rotation.z }))
+                    } else {
+                        copyUtil(`vector3(${event.data.rotation.x}, ${event.data.rotation.y}, ${event.data.rotation.z})`)
+                    }
+                }
+            }
+        })
+
+        function copyUtil (text) {
+            let $temp = $("<input>")
+            $("body").append($temp)
+            $temp.val(text).select()
+            document.execCommand("copy")
+            $temp.remove()
+        }
+    </script>
+</body>
+</html>
